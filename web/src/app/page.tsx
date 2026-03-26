@@ -2,7 +2,7 @@
 
 import { useState, useRef, DragEvent, ChangeEvent } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://YOUR-WORKER.workers.dev";
+const API_URL = "/api/removebg";
 
 type UploadState = "idle" | "loading" | "success" | "error";
 
@@ -116,11 +116,7 @@ export default function Home() {
 
         {uploadState === "idle" || uploadState === "error" ? (
           <div
-            className={`
-              border-3 border-dashed rounded-2xl p-12 text-center cursor-pointer
-              transition-all duration-300
-              ${isDragOver ? "border-purple-500 bg-purple-50" : "border-purple-500 bg-purple-50 hover:bg-purple-100"}
-            `}
+            className={`border-3 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 ${isDragOver ? "border-purple-500 bg-purple-50" : "border-purple-500 bg-purple-50 hover:bg-purple-100"}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -174,7 +170,7 @@ export default function Home() {
         )}
 
         <div className="text-center mt-8 text-xs text-gray-400">
-          Powered by Remove.bg + Cloudflare Workers
+          Powered by Remove.bg
         </div>
       </div>
     </main>
