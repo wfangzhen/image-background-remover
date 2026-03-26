@@ -24,8 +24,11 @@ export async function POST(request: Request) {
 
     const apiKey = process.env.REMOVE_BG_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: 'REMOVE_BG_API_KEY not configured' }, { status: 500, headers: corsHeaders });
+      return NextResponse.json({ error: 'REMOVE_BG_API_KEY not configured on Vercel' }, { status: 500, headers: corsHeaders });
     }
+
+    // Debug: log API key presence (not the key itself)
+    console.log('Remove.bg API key present:', !!apiKey, 'Key length:', apiKey?.length);
 
     // Decode base64 to binary
     const binaryString = atob(image_base64);
@@ -41,6 +44,8 @@ export async function POST(request: Request) {
     formData.append('size', 'auto');
     formData.append('format', 'png');
 
+    console.log('Calling Remove.bg API...');
+
     const apiResponse = await fetch('https://api.remove.bg/v1.0/removebg', {
       method: 'POST',
       headers: {
@@ -49,11 +54,27 @@ export async function POST(request: Request) {
       body: formData,
     });
 
+    console.log('Remove.bg response status:', apiResponse.status);
+
     if (!apiResponse.ok) {
+      const errorText = await apiResponse.text();
+      console.error('Remove.bg API error:', errorText);
       const errorData = await apiResponse.json().catch(() => ({}));
       return NextResponse.json(
-        { error: errorData.errors?.[0]?.title || 'API error' },
+        { error: errorData.errors?.[0]?.title || 'Remove.bg API error: ' + errorText.substring(0, 100) },
         { status: apiResponse.status, headers: corsHeaders }
+      );
+    }
+
+    // Check if response is actually an image
+    const contentType = apiResponse.headers.get('content-type');
+    console.log('Remove.bg content-type:', contentType);
+    if (!contentType || !contentType.includes('image')) {
+      const responseText = await apiResponse.text();
+      console.error('Remove.bg returned non-image:', responseText.substring(0, 200));
+      return NextResponse.json(
+        { error: 'Remove.bg returned invalid response' },
+        { status: 500, headers: corsHeaders }
       );
     }
 
