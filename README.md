@@ -14,7 +14,7 @@
 ## 项目结构
 
 ```
-image-bg-remover/
+image-background-remover/
 ├── index.html      # 前端页面
 ├── worker.js       # Cloudflare Worker
 ├── wrangler.toml   # 部署配置
@@ -48,7 +48,7 @@ wrangler secret put REMOVE_BG_API_KEY
 ### 4. 部署 Worker
 
 ```bash
-cd image-bg-remover
+cd image-background-remover
 wrangler deploy
 ```
 
