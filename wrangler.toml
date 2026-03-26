@@ -1,0 +1,11 @@
+name = "image-bg-remover"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+# 前端 API URL（部署后更新这里）
+API_URL = "https://YOUR-WORKER.workers.dev"
+
+# Secret: Remove.bg API Key
+# 执行: wrangler secret put REMOVE_BG_API_KEY
+# 然后输入你的 API Key
